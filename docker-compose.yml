@@ -49,6 +49,7 @@ services:
     secrets:
     - authentik_secret_key
     - pg_pass
+    - authentik_email_password
 
   worker:
     command: worker
@@ -77,6 +78,7 @@ services:
     secrets:
     - authentik_secret_key
     - pg_pass
+    - authentik_email_password
 
 volumes:
   # database:
@@ -89,3 +91,5 @@ secrets:
     file: ${SECRETS}/AUTHENTIK_SECRET_KEY
   pg_pass:
     file: ${SECRETS}/PG_PASS
+  authentik_email_password:
+    file: ${SECRETS}/AUTHENTIK_EMAIL_PASSWORD
