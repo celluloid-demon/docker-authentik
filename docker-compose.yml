@@ -37,6 +37,7 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       # AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
       AUTHENTIK_SECRET_KEY: file:///run/secrets/authentik_secret_key
+    # WARNING: IMAGE VERSIONS MUST MATCH FOR SERVER, WORKER, PROXY OUTPOSTS, ETC...
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.1}
     ports:
     - ${COMPOSE_PORT_HTTP:-9000}:9000
@@ -66,6 +67,7 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       # AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
       AUTHENTIK_SECRET_KEY: file:///run/secrets/authentik_secret_key
+    # WARNING: IMAGE VERSIONS MUST MATCH FOR SERVER, WORKER, PROXY OUTPOSTS, ETC...
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.1}
     restart: unless-stopped
     shm_size: 512mb
