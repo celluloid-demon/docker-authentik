@@ -1,0 +1,17 @@
+---
+services:
+  postgresql:
+    networks:
+    - nginx-proxy-manager
+
+  server:
+    networks:
+    - nginx-proxy-manager
+    
+  worker:
+    networks:
+    - nginx-proxy-manager
+
+networks:
+  nginx-proxy-manager:
+    external: true
