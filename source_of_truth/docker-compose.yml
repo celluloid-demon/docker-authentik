@@ -1,11 +1,11 @@
----
+# Downloaded from: https://docs.goauthentik.io/install-config/install/docker-compose
 services:
   postgresql:
     env_file:
-    - ${ENV_FILE:-.env}
+    - .env
     environment:
       POSTGRES_DB: ${PG_DB:-authentik}
-      # POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
       POSTGRES_USER: ${PG_USER:-authentik}
     healthcheck:
       interval: 30s
@@ -15,59 +15,54 @@ services:
       - CMD-SHELL
       - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
       timeout: 5s
-    image: ${PG_IMAGE:-docker.io/library/postgres}:${PG_TAG:-16-alpine}
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
     volumes:
-    - ${DATABASE:-database}:/var/lib/postgresql/data
-
+    - database:/var/lib/postgresql/data
   server:
     command: server
     depends_on:
       postgresql:
         condition: service_healthy
     env_file:
-    - ${ENV_FILE:-.env}
+    - .env
     environment:
       AUTHENTIK_POSTGRESQL__HOST: postgresql
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      # AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      # AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
-    # WARNING: IMAGE VERSIONS MUST MATCH FOR SERVER, WORKER, PROXY OUTPOSTS, ETC...
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.2}
-    # ports:
-    # - ${COMPOSE_PORT_HTTP:-9000}:9000
-    # - ${COMPOSE_PORT_HTTPS:-9443}:9443
+    ports:
+    - ${COMPOSE_PORT_HTTP:-9000}:9000
+    - ${COMPOSE_PORT_HTTPS:-9443}:9443
     restart: unless-stopped
     shm_size: 512mb
     volumes:
-    - ${DATA:-./data}:/data
-    - ${CUSTOM_TEMPLATES:-./custom-templates}:/templates
-
+    - ./data:/data
+    - ./custom-templates:/templates
   worker:
     command: worker
     depends_on:
       postgresql:
         condition: service_healthy
     env_file:
-    - ${ENV_FILE:-.env}
+    - .env
     environment:
       AUTHENTIK_POSTGRESQL__HOST: postgresql
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      # AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      # AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
-    # WARNING: IMAGE VERSIONS MUST MATCH FOR SERVER, WORKER, PROXY OUTPOSTS, ETC...
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.2}
     restart: unless-stopped
     shm_size: 512mb
     user: root
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - ${DATA:-./data}:/data
-    - ${CERTS:-./certs}:/certs
-    - ${CUSTOM_TEMPLATES:-./custom-templates}:/templates
-
+    - ./data:/data
+    - ./certs:/certs
+    - ./custom-templates:/templates
 volumes:
   database:
     driver: local

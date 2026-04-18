@@ -1,0 +1,15 @@
+---
+services:
+  postgresql:
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?database password required}
+
+  server:
+    environment:
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+
+  worker:
+    environment:
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
