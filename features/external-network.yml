@@ -1,14 +1,14 @@
 ---
 services:
-  postgresql:
+  ak-postgresql:
     networks:
     - nginx-proxy-manager
 
-  server:
+  ak-server:
     networks:
     - nginx-proxy-manager
-    
-  worker:
+
+  ak-worker:
     networks:
     - nginx-proxy-manager
 

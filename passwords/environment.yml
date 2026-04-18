@@ -1,15 +1,15 @@
 ---
 services:
-  postgresql:
+  ak-postgresql:
     environment:
       POSTGRES_PASSWORD: ${PG_PASSWORD:?database password required}
 
-  server:
+  ak-server:
     environment:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
 
-  worker:
+  ak-worker:
     environment:
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}

@@ -1,6 +1,6 @@
 ---
 services:
-  postgresql:
+  ak-postgresql:
     env_file:
     - ${ENV_FILE:-.env}
     environment:
@@ -20,15 +20,15 @@ services:
     volumes:
     - ${DATABASE:-database}:/var/lib/postgresql/data
 
-  server:
+  ak-server:
     command: server
     depends_on:
-      postgresql:
+      ak-postgresql:
         condition: service_healthy
     env_file:
     - ${ENV_FILE:-.env}
     environment:
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__HOST: ak-postgresql
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       # AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
@@ -44,15 +44,15 @@ services:
     - ${DATA:-./data}:/data
     - ${CUSTOM_TEMPLATES:-./custom-templates}:/templates
 
-  worker:
+  ak-worker:
     command: worker
     depends_on:
-      postgresql:
+      ak-postgresql:
         condition: service_healthy
     env_file:
     - ${ENV_FILE:-.env}
     environment:
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__HOST: ak-postgresql
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       # AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASSWORD}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
